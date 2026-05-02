@@ -3,6 +3,7 @@
 use App\Http\Controllers\chef\DashboardController;
 use App\Http\Controllers\GestionEnseignantController;
 use App\Http\Controllers\GestionSalleController;
+use App\Http\Controllers\GestionSeanceController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -53,7 +54,21 @@ Route::post('/chef/salle', [GestionSalleController::class, 'store'])->name('chef
 Route::put('/chef/salle/{id}', [GestionSalleController::class, 'update'])->name('chef.salle.update');
 
 Route::delete('/chef/salle/{id}', [GestionSalleController::class, 'destroy'])->name('chef.salle.destroy');
+//seance
+Route::get('/chef/seance', [GestionSeanceController::class, 'index'])
+    ->name('chef.gestionSeance');
 
+Route::post('/chef/seance', [GestionSeanceController::class, 'store'])
+    ->name('chef.seance.store');
+
+Route::put('/chef/seance/{id}', [GestionSeanceController::class, 'update'])
+    ->name('chef.seance.update');
+
+Route::delete('/chef/seance/{id}', [GestionSeanceController::class, 'destroy'])
+    ->name('chef.seance.destroy');
+Route::get('/salles-disponibles', [GestionSeanceController::class, 'disponibles']);
+
+Route::get('/enseignants-disponibles', [GestionSeanceController::class, 'enseignantsDisponibles']);
 //--------------------------------------------------
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

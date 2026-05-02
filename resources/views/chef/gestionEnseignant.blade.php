@@ -18,6 +18,7 @@
             <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
                 <tr>
                     <th class="px-6 py-4">Nom</th>
+                    <th class="px-6 py-4">Prenom</th>
                     <th class="px-6 py-4">Email</th>
                     <th class="px-6 py-4">Action</th>
                 </tr>
@@ -28,18 +29,21 @@
                 <!-- Example row -->
                 <tr class="hover:bg-gray-50">
                     <td class="px-6 py-4 font-medium text-gray-800">
-                        {{$e->name}}
+                        {{$e->nom}}
+                    </td>
+                    <td class="px-6 py-4 font-medium text-gray-800">
+                        {{$e->prenom}}
                     </td>
 
                     <td class="px-6 py-4 text-gray-600">
-                        {{$e->email}}
+                        {{$e->user->email}}
                     </td>
 
                     <td class="px-6 py-4">
                         <div class="flex items-center h-full gap-4">
 
                             <button class="text-blue-600 hover:text-blue-800 font-medium leading-none"
-                                onclick="editEnseignant('{{ $e->id }}', '{{ $e->name }}', '{{ $e->email }}')">
+                                onclick="editEnseignant('{{ $e->id }}', '{{ $e->nom }}','{{$e->prenom}}', '{{ $e->user->email }}')">
                                 Modifier
                             </button>
 
@@ -80,7 +84,10 @@
             <input type="hidden" name="id" id="enseignant_id">
             <p>Nom</p>
             <input type="text" name="nom" id="nom"
-                class="w-full mb-3 border rounded-lg px-3 py-2" placeholder ='AmineHayouni' required>
+                class="w-full mb-3 border rounded-lg px-3 py-2" placeholder ='Hayouni' required>
+            <p>Prenom</p>
+            <input type="text" name="prenom" id="prenom"
+                class="w-full mb-3 border rounded-lg px-3 py-2" placeholder ='Amine' required>
             <p>Email</p>
             <input type="email" name="email" id="email"
                 class="w-full mb-3 border rounded-lg px-3 py-2" placeholder ='mdamine.hayouni@gmail.com' required>
@@ -108,6 +115,7 @@ function openModal() {
     document.getElementById('methodField').value = "POST";
 
     document.getElementById('nom').value = "";
+    document.getElementById('prenom').value = "";
     document.getElementById('email').value = "";
     document.getElementById('password').style.display = "block";
     document.getElementById('password_text').style.display = "block";
@@ -115,12 +123,13 @@ function openModal() {
     document.getElementById('modal').classList.remove('hidden');
     document.getElementById('modal').classList.add('flex');
 }
-function editEnseignant(id, name, email) {
+function editEnseignant(id, name,prenom, email) {
 
     document.getElementById('enseignantForm').action = `/chef/enseignant/${id}`;
     document.getElementById('methodField').value = "PUT";
 
     document.getElementById('nom').value = name;
+    document.getElementById('prenom').value = prenom;
     document.getElementById('email').value = email;
 
     document.getElementById('password').style.display = "none";

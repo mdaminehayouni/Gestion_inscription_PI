@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Enseignant;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -14,7 +15,7 @@ class GestionEnseignantController extends Controller
      */
     public function index()
     {
-        $enseignants = User::where('role','enseignant')->get();
+        $enseignants = Enseignant::with('user')->get();
         return view('chef.gestionEnseignant',compact('enseignants'));
     }
 
@@ -36,11 +37,17 @@ class GestionEnseignantController extends Controller
             'email'=>'required|email|unique:users',
             'password'=>'required|min:8',
         ]);
-        User::create([
+        $user=User::create([
             'name' => $request->nom, // or name
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'enseignant',
+        ]);
+
+        Enseignant::create([
+            'user_id' => $user->id,
+            'nom' => $request->nom,
+            'prenom' => $request->prenom
         ]);
         return redirect()->route('chef.gestionEnseignant');
     }
@@ -58,7 +65,7 @@ class GestionEnseignantController extends Controller
      */
     public function edit(string $id)
     {
-        $enseignant = User::where('role', 'enseignant')->findOrFail($id);
+        $enseignant = Enseignant::findOrFail($id);
 
         return view('chef.editEnseignant', compact('enseignant'));
     }
@@ -73,11 +80,15 @@ class GestionEnseignantController extends Controller
             'email' => 'required|email',
         ]);
 
-        $enseignant = User::where('role', 'enseignant')->findOrFail($id);
+        $enseignant = Enseignant::findOrFail($id);
 
         $enseignant->update([
-            'name' => $request->nom,
-            'email' => $request->email,
+            'nom' => $request->nom,
+            'prenom' => $request->prenom
+        ]);
+        $enseignant->user->update([
+            'name' => $request->nom . ' ' . $request->prenom,
+            'email' => $request->email
         ]);
 
         return redirect()->route('chef.gestionEnseignant');
@@ -88,8 +99,11 @@ class GestionEnseignantController extends Controller
      */
     public function destroy(string $id)
     {
-        $enseignant = User::where('role', 'enseignant')->findOrFail($id);
+        $enseignant = Enseignant::findOrFail($id);
+        // supprimer user aussi
         $enseignant->delete();
+        $enseignant->user->delete();
+        // puis enseignant
         return redirect()->route('chef.gestionEnseignant');
     }
 }

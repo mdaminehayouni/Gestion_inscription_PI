@@ -34,11 +34,13 @@ class GestionSalleController extends Controller
             'nomSalle'=>'required',
             'capacite'=>'required',
             'type'=>'required',
+            'disponibilite'=>'required'
         ]);
         Salle::create([
             'nomSalle' => $request->nomSalle, // or name
             'capacite' => $request->capacite,
             'type' => $request->type,
+            'disponibilite'=>(int)$request->disponibilite
         ]);
         return redirect()->route('chef.gestionSalle');
     }
@@ -68,6 +70,7 @@ class GestionSalleController extends Controller
             'nomSalle' => 'required',
             'type' => 'required',
             'capacite' => 'required',
+            'disponibilite'=>'required'
         ]);
 
         $salle = Salle::findOrFail($id);
@@ -75,7 +78,8 @@ class GestionSalleController extends Controller
         $salle->update([
             'nomSalle' => $request->nomSalle,
             'type' => $request->type,
-            'capacite' => $request->capacite
+            'capacite' => $request->capacite,
+            'disponibilite'=>(int)$request->disponibilite
         ]);
 
         return redirect()->route('chef.gestionSalle');
